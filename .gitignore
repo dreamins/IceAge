@@ -1,0 +1,4 @@
+*.suo
+IceAge/bin/*
+IceAge/obj/*
+IceAge/config/aws.json
