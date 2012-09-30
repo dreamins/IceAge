@@ -110,6 +110,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="accessor\Accessor.cs" />
+    <Compile Include="Controller.cs" />
     <Compile Include="type\AWSOptions.cs" />
     <Compile Include="type\GeneralOptions.cs" />
     <Compile Include="type\JSONConfig.cs" />
@@ -149,8 +150,9 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="IceAge.config" />
-    <None Include="config\aws.json" />
-    <None Include="config\config.json" />
+    <None Include="config\aws.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -158,7 +160,9 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="config\log4net.xml" />
+    <None Include="config\log4net.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Content Include="lib\AWSSDK.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -22,52 +22,39 @@ namespace IceAge.type
 
         // location of SQLLite db file
         [DataMember]
-        private string sqlLitePath;
+        public string SQLLitePath{get;set;}
 
         // backup SQLLite db file to S3 (and load it if it doesn't exist or is of a newer version)
         // as it is needed to know whether uploaded file is newer than the one on disk
         // is very recommended. After all S3 has a free tier!
         [DataMember]
-        private bool backupToS3;
+        public bool BackupToS3 { get; set; }
 
         // Check if all monitored directories are in sync or no
         [DataMember]
-        private bool syncOnStart;
+        public bool SyncOnStart { get; set; }
 
         // use relaxed resync - compare file size, name and timestamp
         // true by default, as it is fast
         [DataMember]
-        private bool relaxedResyncOnStart;
+        public bool RelaxedResyncOnStart { get; set; }
 
         // use hardcore resync with md5 hash sums and timestamps and names
         // in addition to relaxed resync will compare hashes 
         [DataMember]
-        private bool fullResyncOnStart;
+        public bool FullResyncOnStart { get; set; }
 
         // Maximum number of simultaneous uploads
         [DataMember]
-        private int maxUploads;
+        public uint MaxUploads { get; set; }
 
         // Multipart upload enabled
         [DataMember]
-        private bool multipartEnabled;
+        public bool MultipartEnabled { get; set; }
 
         // Multipart upload threshold in bytes
         [DataMember]
-        private uint multipartThresholdBytes;
-
-        public string SQLLitePath
-        {
-            get
-            {
-                return sqlLitePath;
-            }
-
-            set
-            {
-                sqlLitePath = value;
-            }
-        }
+        public uint MultipartThresholdBytes { get; set; }
 
         internal void write()
         {

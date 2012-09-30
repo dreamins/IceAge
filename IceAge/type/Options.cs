@@ -65,25 +65,48 @@ namespace IceAge.type
                 try
                 {
                     generalOpts = GeneralOptions.load();
-                    awsOpts = AWSOptions.load();
                 }
-                catch (FileNotFoundException)
+                catch (FileNotFoundException ex)
                 {
-                    if (generalOpts == null)
+                    if (withDefaults)
                     {
+                        logger.Info("Defaulting general options to hardcoded values");
                         generalOpts = new GeneralOptions();
                         generalOpts.SQLLitePath = "data/data.db";
+                        generalOpts.BackupToS3 = false;
+                        generalOpts.FullResyncOnStart = false;
+                        generalOpts.MaxUploads = 10;
+                        generalOpts.MultipartEnabled = false;
+                        generalOpts.MultipartThresholdBytes = 10000000;
+                        generalOpts.RelaxedResyncOnStart = true;
+                        generalOpts.SyncOnStart = false;
                     }
-
-                    if (awsOpts == null)
+                    else
                     {
+                        logger.Info("No defaults. Rethrowing.");
+                        throw ex;
+                    }
+                }
+
+                try {
+                    awsOpts = AWSOptions.load();
+                } catch (FileNotFoundException ex) {
+                    if (withDefaults)
+                    {
+                        logger.Info("Defaulting AWS options to hardcoded values");
                         awsOpts = new AWSOptions();
                         awsOpts.AWSAccessKey = String.Empty;
                         awsOpts.AWSSecretKey = String.Empty;
                         awsOpts.GlacierVault = String.Empty;
                         awsOpts.S3Bucket = String.Empty;
                     }
+                    else
+                    {
+                        logger.Info("No defaults. Rethrowing.");
+                        throw ex;
+                    }
                 }
+
                 return new Options(generalOpts, awsOpts);
             }
         }

@@ -20,65 +20,13 @@ namespace IceAge.type
         private const string CONFIG_FILE = "config/aws.json";
 
         [DataMember]
-        private string awsAccessKey;
+        public string AWSAccessKey { get; set; }
         [DataMember]
-        private string awsSecretKey;
+        public string AWSSecretKey { get; set; }
         [DataMember]
-        private string s3Bucket;
+        public string S3Bucket { get; set; }
         [DataMember]
-        private string glacierVault;
-
-        public string AWSAccessKey
-        {
-            get
-            {
-                return awsAccessKey;
-            }
-
-            set
-            {
-                awsAccessKey = value;
-            }
-        }
-
-        public string AWSSecretKey
-        {
-            get
-            {
-                return awsSecretKey;
-            }
-
-            set
-            {
-                awsSecretKey = value;
-            }
-        }
-
-        public string S3Bucket
-        {
-            get
-            {
-                return S3Bucket;
-            }
-
-            set
-            {
-                S3Bucket = value;
-            }
-        }
-
-        public string GlacierVault
-        {
-            get
-            {
-                return glacierVault;
-            }
-
-            set
-            {
-                glacierVault = value;
-            }
-        }
+        public string GlacierVault { get; set; }
 
         internal void write()
         {
