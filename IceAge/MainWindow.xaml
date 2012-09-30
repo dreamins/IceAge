@@ -3,6 +3,73 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="IceAge - Amazon Glacier client" Height="484" Width="842">
     <Grid>
-        
+        <TabControl Margin="0,0,0,0">
+            <TabItem Header="Upload">
+                <Grid VerticalAlignment="Top">
+                    <ScrollViewer Height="412" HorizontalAlignment="Left" Margin="3,5,0,0" Name="scrollViewer1" VerticalAlignment="Top" Width="614">
+                        <DataGrid AutoGenerateColumns="False" Height="406" Name="dataGrid1" Width="610" >
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Binding="{Binding Path=Uri, Mode=OneWay}" Header="File name" IsReadOnly="True" MinWidth="200" />
+                                <DataGridTextColumn Binding="{Binding Path=Size, Mode=OneWay}" Header="Size" IsReadOnly="True"  MinWidth="100"/>
+                                <DataGridTemplateColumn Header="Progress" MinWidth="150">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <ProgressBar Value="{Binding Path=Progress, Mode=OneWay}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Binding="{Binding Path=Speed, Mode=OneWay}" Header="Speed" IsReadOnly="True" MinWidth="80"/>
+                                <DataGridTextColumn Binding="{Binding Path=Priority, Mode=OneWay}" Header="MultiPart" IsReadOnly="True" MinWidth="66"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </ScrollViewer>
+                    <Button Content="Add" Height="43" HorizontalAlignment="Left" Margin="622,10,0,0" Name="button1" VerticalAlignment="Top" Width="176" />
+                    <Button Content="Sync" Height="43" HorizontalAlignment="Left" Margin="622,73,0,0" Name="button2" VerticalAlignment="Top" Width="176" />
+                    <Button Content="Upload and forget" Height="43" HorizontalAlignment="Left" Margin="622,0,0,234" Name="button3" VerticalAlignment="Bottom" Width="176" />
+                </Grid>
+            </TabItem>
+            <TabItem Header="Options">
+                <Grid VerticalAlignment="Top" Height="417">
+                    <TextBox Height="26" HorizontalAlignment="Left" Margin="17,24,0,0" Name="SQLLitePath" VerticalAlignment="Top" Width="237" />
+                    <Label Content="Sync DB data path" Height="26" HorizontalAlignment="Left" Margin="268,24,0,0" Name="opts_label2" VerticalAlignment="Top" />
+                    <CheckBox Content="Backup Sync DB to S3 (may be useful for portable drives)" Height="26" HorizontalAlignment="Left" Margin="17,66,0,0" Name="backupToS3" VerticalAlignment="Top" Width="358" />
+                    <CheckBox Content="Sync on start" Height="26" HorizontalAlignment="Left" Margin="17,101,0,0" Name="syncOnSTart" VerticalAlignment="Top" Width="358" />
+                    <CheckBox Content="Fast resync on start (use file name, date and size, calculate checksum only if differ)" Height="19" HorizontalAlignment="Left" Margin="17,136,0,0" Name="checkBox1" VerticalAlignment="Top" Width="469" />
+                    <CheckBox Content="Full resync on start (calculate checksums every time)" Height="26" HorizontalAlignment="Left" Margin="17,171,0,0" Name="checkBox2" VerticalAlignment="Top" Width="358" />
+                    <TextBox Height="26" HorizontalAlignment="Left" Margin="17,206,0,0" Name="maxUploads" VerticalAlignment="Top" Width="50" />
+                    <Label Content="Max simultaneous uploads" Height="26" HorizontalAlignment="Right" Margin="0,206,536,0" Name="label5" VerticalAlignment="Top" Width="201" />
+                    <CheckBox Content="Enable multipart uploads" Height="26" HorizontalAlignment="Left" Margin="17,248,0,0" Name="multipartEnabled" VerticalAlignment="Top" Width="358" />
+                    <TextBox Height="26" HorizontalAlignment="Left" Margin="17,290,0,0" Name="multipartThresholdBytes" VerticalAlignment="Top" Width="84" />
+                    <Label Content="Use multipart if file size is greater than" Height="26" HorizontalAlignment="Right" Margin="0,290,454,0" Name="label6" VerticalAlignment="Top" Width="235" />
+                    <!--    
+
+        // Multipart upload threshold in bytes
+        [DataMember]
+        private uint multipartThresholdBytes; -->
+                </Grid>
+            </TabItem>
+            <TabItem Header="AWSOptions">
+                <Grid VerticalAlignment="Top" Height="417">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="211" />
+                        <ColumnDefinition Width="599" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox Height="26" HorizontalAlignment="Left" Margin="17,24,0,0" Name="AWSAccessKey" VerticalAlignment="Top" Width="237" Grid.ColumnSpan="2" />
+                    <Label Content="AWS secret key" Height="26" HorizontalAlignment="Left" Margin="60,54,0,0" Name="label2" VerticalAlignment="Top" Grid.Column="1" />
+                    <TextBox Height="26" HorizontalAlignment="Left" Margin="17,56,0,0" Name="AWSSecretKey" VerticalAlignment="Top" Width="237" Grid.ColumnSpan="2" />
+                    <Label Content="AWS access key" HorizontalAlignment="Left" Margin="60,24,0,30" Name="label1" Grid.Column="1" />
+                    <TextBox Height="26" HorizontalAlignment="Left" Margin="17,88,0,0" Name="S3BucketName" VerticalAlignment="Top" Width="237" Grid.ColumnSpan="2" />
+                    <Label Content="S3 bucket name to store sync DB" Height="26" HorizontalAlignment="Left" Margin="60,86,0,0" Name="label3" VerticalAlignment="Top" Grid.Column="1" />
+                    <TextBox Height="26" HorizontalAlignment="Left" Margin="17,120,0,0" Name="GlacierVaultName" VerticalAlignment="Top" Width="237" Grid.ColumnSpan="2" />
+                    <Label Content="Glacier vault name" Height="26" HorizontalAlignment="Left" Margin="60,118,0,0" Name="label4" VerticalAlignment="Top" Grid.Column="1" />
+                </Grid>
+            </TabItem>
+            <TabItem Header="About">
+                <Grid VerticalAlignment="Top" Height="417">
+                    <Label Content="Some text here" Height="28" Name="label7" Margin="362,172,335,217" Width="113" />
+                </Grid>
+            </TabItem>
+        </TabControl>
+
     </Grid>
 </Window>

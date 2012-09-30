@@ -30,6 +30,10 @@ namespace IceAge.type
         [DataMember]
         private bool backupToS3;
 
+        // Check if all monitored directories are in sync or no
+        [DataMember]
+        private bool syncOnStart;
+
         // use relaxed resync - compare file size, name and timestamp
         // true by default, as it is fast
         [DataMember]
