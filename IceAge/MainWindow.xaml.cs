@@ -101,5 +101,21 @@ namespace IceAge
                 bindOptions();
             }
         }
+
+        private void buttonAdd_Click(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Forms.FolderBrowserDialog folderDialog = new System.Windows.Forms.FolderBrowserDialog();
+            folderDialog.SelectedPath = "C:\\";
+
+            System.Windows.Forms.DialogResult result = folderDialog.ShowDialog();
+            if (!result.ToString().Equals("OK"))
+            {
+                return;
+            }
+
+            string path = folderDialog.SelectedPath;
+            controller.addPath(path);
+            scrolledDataGrid.ItemsSource = controller.Uploads;
+        }
     }
 }
