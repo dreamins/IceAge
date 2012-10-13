@@ -15,15 +15,13 @@ namespace IceAge.type
     public class Options
     {
         private static readonly ILog logger = LogManager.GetLogger(typeof(Options).FullName);
+        private static Object lockObject = new Object();
+        private static volatile Options instance = null;
+
         private GeneralOptions generalOptions;
         private AWSOptions awsOptions;
-        private static Object lockObject = new Object();
-
-        private Options(GeneralOptions generalOpts, AWSOptions awsOpts)
-        {
-            this.generalOptions = generalOpts;
-            this.awsOptions = awsOpts;
-        }
+        // whether this is a result of hardcoded default filed stuff
+        private bool defaulted;
 
         public GeneralOptions GeneralOptions
         {
@@ -41,6 +39,41 @@ namespace IceAge.type
             }
         }
 
+        public bool Defaulted
+        {
+            get
+            {
+                return defaulted;
+            }
+        }
+
+        public static Options Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    lock (lockObject)
+                    {
+                        if (instance == null)
+                        {
+                            instance = loadFromConfig();
+                        }
+                    }
+                }
+
+                return instance;
+            }
+        }
+
+        private Options(GeneralOptions generalOpts, AWSOptions awsOpts, bool defaulted)
+        {
+            this.generalOptions = generalOpts;
+            this.awsOptions = awsOpts;
+            this.defaulted = defaulted;
+        }
+
+
         // Serializes the object into json configuration
         public void writeToConfig()
         {
@@ -54,9 +87,20 @@ namespace IceAge.type
             }
         }
 
-        // Factory method to read from config
-        public static Options loadFromConfig(bool withDefaults = false)
+        public Options Clone()
         {
+            lock (lockObject)
+            {
+                GeneralOptions generalOpts = generalOptions.Clone();
+                AWSOptions awsOpts = awsOptions.Clone();
+                return new Options(generalOptions, awsOptions, defaulted);
+            }
+        }
+
+        // Factory method to read from config
+        private static Options loadFromConfig()
+        {
+            bool defaulted = false;
             lock (lockObject)
             {
                 logger.Info("Loading configuration");
@@ -66,79 +110,38 @@ namespace IceAge.type
                 {
                     generalOpts = GeneralOptions.load();
                 }
-                catch (FileNotFoundException ex)
+                catch (FileNotFoundException )
                 {
-                    if (withDefaults)
-                    {
-                        logger.Info("Defaulting general options to hardcoded values");
-                        generalOpts = new GeneralOptions();
-                        generalOpts.SQLLitePath = "data/data.db";
-                        generalOpts.BackupToS3 = false;
-                        generalOpts.FullResyncOnStart = false;
-                        generalOpts.MaxUploads = 10;
-                        generalOpts.MultipartEnabled = false;
-                        generalOpts.MultipartThresholdBytes = 10000000;
-                        generalOpts.RelaxedResyncOnStart = true;
-                        generalOpts.SyncOnStart = false;
-                    }
-                    else
-                    {
-                        logger.Info("No defaults. Rethrowing.");
-                        throw ex;
-                    }
+                    logger.Info("Defaulting general options to hardcoded values");
+                    generalOpts = new GeneralOptions();
+                    generalOpts.SQLLitePath = "data/data.db";
+                    generalOpts.BackupToS3 = false;
+                    generalOpts.FullResyncOnStart = false;
+                    generalOpts.MaxUploads = 10;
+                    generalOpts.MultipartEnabled = false;
+                    generalOpts.MultipartThresholdBytes = 10000000;
+                    generalOpts.RelaxedResyncOnStart = true;
+                    generalOpts.SyncOnStart = false;
+                    defaulted = true;
                 }
 
-                try {
+                try
+                {
                     awsOpts = AWSOptions.load();
-                } catch (FileNotFoundException ex) {
-                    if (withDefaults)
-                    {
-                        logger.Info("Defaulting AWS options to hardcoded values");
-                        awsOpts = new AWSOptions();
-                        awsOpts.AWSAccessKey = String.Empty;
-                        awsOpts.AWSSecretKey = String.Empty;
-                        awsOpts.GlacierVault = String.Empty;
-                        awsOpts.S3Bucket = String.Empty;
-                    }
-                    else
-                    {
-                        logger.Info("No defaults. Rethrowing.");
-                        throw ex;
-                    }
                 }
-
-                return new Options(generalOpts, awsOpts);
-            }
-        }
-
-        public Options Clone()
-        {
-            lock (lockObject)
-            {
-                GeneralOptions generalOpts = generalOptions.Clone();
-                AWSOptions awsOpts = awsOptions.Clone();
-                return new Options(generalOptions, awsOptions);
-            }
-        }
-
-        public static bool isReady()
-        {
-            try
-            {
-                // kinda hacky
-                lock (lockObject)
+                catch (FileNotFoundException )
                 {
-                    GeneralOptions generalOpts = GeneralOptions.load();
-                    AWSOptions awsOpts = AWSOptions.load();
+                    logger.Info("Defaulting AWS options to hardcoded values");
+                    awsOpts = new AWSOptions();
+                    awsOpts.AWSAccessKey = String.Empty;
+                    awsOpts.AWSSecretKey = String.Empty;
+                    awsOpts.GlacierVault = String.Empty;
+                    awsOpts.S3Bucket = String.Empty;
+                    defaulted = true; 
                 }
-            }
-            catch (FileNotFoundException)
-            {
-                logger.Warn("File not found not ready");
-                return false;
-            }
 
-            return true;
+                return new Options(generalOpts, awsOpts, defaulted);
+            }
         }
     }
 }

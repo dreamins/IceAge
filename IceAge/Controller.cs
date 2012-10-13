@@ -12,11 +12,9 @@ namespace IceAge
     {
         private static readonly ILog logger = LogManager.GetLogger(typeof(Controller).FullName);
 
-        private Options options;
         public UploadUnitList Uploads { get; private set; }
 
-        public Controller(Options options){
-            this.options = options;
+        public Controller(){
             // TODO: load from db if need sync
             this.Uploads = new UploadUnitList();
         }
