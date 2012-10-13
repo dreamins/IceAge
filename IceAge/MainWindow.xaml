@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="IceAge - Amazon Glacier client" Height="484" Width="860" ResizeMode="NoResize">
     <Grid>
-        <TabControl Margin="0,0,0,0" Name="MainTabControl" SelectionChanged="MainTabControl_SelectionChanged">
+        <TabControl Margin="0,0,0,0" Name="MainTabControl">
             <TabItem Header="Upload" Name="UploadTabItem">
                 <Grid VerticalAlignment="Top" Width="829" Height="414">
                 <DataGrid AutoGenerateColumns="False" Height="406" Name="scrolledDataGrid" ItemsSource="{Binding Source={StaticResource UploadUnits}}" Margin="6,0,194,0" DataContext="{Binding}">

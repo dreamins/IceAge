@@ -35,8 +35,6 @@ namespace IceAge
             {
                 MainTabControl.SelectedItem = MainTabControl.FindName("OptionsTabItem");
             }
-            
-            
         }
 
         private void optionsSave_Click(object sender, RoutedEventArgs e)
@@ -45,25 +43,6 @@ namespace IceAge
             logger.Debug("Trying to save config");
             //save back
             Options.Instance.writeToConfig();
-        }
-
-        private void bindOptions()
-        {
-            logger.Debug("Trying to load config");
-            Options opts = Options.Instance;
-        }
-
-        private void MainTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (OptionsTabItem.IsSelected)
-            {
-                bindOptions();
-            }
-
-            if (AWSOptionsTabItem.IsSelected)
-            {
-                bindOptions();
-            }
         }
 
         private void buttonAdd_Click(object sender, RoutedEventArgs e)
