@@ -33,6 +33,7 @@ namespace IceAge
                 MainTabControl.SelectedItem = MainTabControl.FindName("OptionsTabItem");
             }
             controller = new Controller(Options.loadFromConfig(true));
+            scrolledDataGrid.ItemsSource = controller.Uploads;
         }
 
         private void optionsSave_Click(object sender, RoutedEventArgs e)
@@ -115,7 +116,6 @@ namespace IceAge
 
             string path = folderDialog.SelectedPath;
             controller.addPath(path);
-            scrolledDataGrid.ItemsSource = controller.Uploads;
         }
     }
 }

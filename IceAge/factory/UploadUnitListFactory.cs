@@ -13,7 +13,7 @@ namespace IceAge.factory
     {
         private static readonly ILog logger = LogManager.GetLogger(typeof(UploadUnitFactory).FullName);
 
-        public static List<UploadUnit> createUploadUnitsFromPath(string filePath)
+        public static ICollection<UploadUnit> createUploadUnitsFromPath(string filePath)
         {
             logger.Info("Adding new upload item " + filePath);
             FileAttributes attributes = File.GetAttributes(filePath);
@@ -29,7 +29,8 @@ namespace IceAge.factory
             return createUploadUnitsFromDirectory(new DirectoryInfo(filePath));
         }
 
-        private static List<UploadUnit> createUploadUnitsFromDirectory(System.IO.DirectoryInfo path) {
+        private static ICollection<UploadUnit> createUploadUnitsFromDirectory(System.IO.DirectoryInfo path)
+        {
             logger.Info("Recursing into " + path.FullName);
             List<UploadUnit> ret = new List<UploadUnit>();
             FileInfo[] files = null;
@@ -54,7 +55,7 @@ namespace IceAge.factory
 
             foreach (System.IO.DirectoryInfo dirInfo in subDirs)
             {
-                List <UploadUnit>  subList = createUploadUnitsFromDirectory(dirInfo);
+                ICollection<UploadUnit> subList = createUploadUnitsFromDirectory(dirInfo);
                 ret.AddRange(subList);
             }
 
