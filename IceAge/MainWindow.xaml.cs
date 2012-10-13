@@ -30,6 +30,7 @@ namespace IceAge
             controller = new Controller();
             Resources.Add("UploadUnits", controller.Uploads);
             Resources.Add("Options", Options.Instance);
+            controller.EstimationChanged += new Controller.EstimationChangedHandler(controller_EstimationChanged);
             InitializeComponent();
             if (Options.Instance.Defaulted)
             {
@@ -58,6 +59,17 @@ namespace IceAge
 
             string path = folderDialog.SelectedPath;
             controller.addPath(path);
+        }
+
+        private void controller_EstimationChanged(object sender, Controller.EstimationChangedEventArgs args)
+        {
+            estimateMonthlyCost.Content = "$" + args.Estimations.MonthlyCost;
+            estimateRequestsCost.Content = "$" + args.Estimations.RequestsCost;
+        }
+
+        private void button1_Click(object sender, RoutedEventArgs e)
+        {
+            controller.clearPaths();
         }
     }
 }
