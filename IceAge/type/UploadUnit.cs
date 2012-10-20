@@ -9,16 +9,22 @@ namespace IceAge.type
 {
     class UploadUnit
     {
+        public long Id { get; set; }
         public string FileName {get; private set;}
         public string FullName {get; private set;}
         public long Size { get; private set; }
-        public String Checksum {get; private set;}
+        public long Timestamp { get; private set; }
+        public String Checksum {get; set;}
+        public bool InSync { get; set; }
 
-        public UploadUnit(string name, string fullName, long size)
+        public UploadUnit(string name, string fullName, long size, long timestamp)
         {
+            this.Id = -1;
             this.FileName = name;
             this.FullName = fullName;
             this.Size = size;
+            this.Timestamp = timestamp;
+            this.InSync = false;
         }
 
         public String calculateChecksum() {

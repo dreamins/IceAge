@@ -19,6 +19,7 @@
                         </DataGridTemplateColumn>
                         <DataGridTextColumn Binding="{Binding Path=Speed, Mode=OneWay}" Header="Speed" IsReadOnly="True" MinWidth="80"/>
                         <DataGridTextColumn Binding="{Binding Path=MultiPart, Mode=OneWay}" Header="MultiPart" IsReadOnly="True" MinWidth="66"/>
+                        <DataGridTextColumn Binding="{Binding Path=InSync, Mode=OneWay}" Header="InSync" IsReadOnly="True" MinWidth="66"/>
                     </DataGrid.Columns>
                 </DataGrid>
                     <Button Content="Add" Height="43" HorizontalAlignment="Left" Margin="639,6,0,0" Name="buttonAdd" VerticalAlignment="Top" Width="176" Click="buttonAdd_Click" />
@@ -31,6 +32,7 @@
                     <Label Content="Traffic" Height="25" HorizontalAlignment="Left" Margin="639,0,0,14" Name="label15" VerticalAlignment="Bottom" Width="71" />
                     <Label Content="?" Height="23" HorizontalAlignment="Left" Margin="716,346,0,0" Name="estimateMonthlyCost" VerticalAlignment="Top" Width="71" />
                     <Label Content="?" Height="23" HorizontalAlignment="Left" Margin="716,377,0,0" Name="estimateRequestsCost" VerticalAlignment="Top" Width="71" />
+                    <CheckBox Content="Show all" Height="16" HorizontalAlignment="Left" Margin="639,252,0,0" Name="showAllCheckBox" VerticalAlignment="Top" Width="176" Checked="showAllCheckBox_Checked" />
                 </Grid>
             </TabItem>
             <TabItem Header="Options" Name="OptionsTabItem">

@@ -27,6 +27,7 @@ namespace IceAge
 
         public MainWindow()
         {
+            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(unhandledExceptionHandler);
             controller = new Controller();
             Resources.Add("UploadUnits", controller.Uploads);
             Resources.Add("Options", Options.Instance);
@@ -70,6 +71,26 @@ namespace IceAge
         private void button1_Click(object sender, RoutedEventArgs e)
         {
             controller.clearPaths();
+        }
+
+        private void showAllCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (showAllCheckBox.IsChecked.Value)
+            {
+                showAllCheckBox.Content = "Show out of sync only";
+            }
+            else
+            {
+                showAllCheckBox.Content = "Show all";
+            }
+        }
+
+        public void unhandledExceptionHandler(Object sender, UnhandledExceptionEventArgs e)
+        {
+            logger.Fatal("=====================================\n");
+            logger.Fatal("Unhandled exception", (Exception)e.ExceptionObject);
+            logger.Fatal("\n=====================================");
+            MessageBox.Show("Fatal error occured, please file an issue with last lines of log here https://github.com/dreamins/IceAge");
         }
     }
 }

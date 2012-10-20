@@ -23,6 +23,12 @@ namespace IceAge.type
         // whether this is a result of hardcoded default filed stuff
         private bool defaulted;
 
+        public delegate void OptionsChangedHandler(object sender, OptionsChangedEventArgs e);
+        public event OptionsChangedHandler OptionsChanged;
+        public class OptionsChangedEventArgs : EventArgs
+        {
+        }
+
         public GeneralOptions GeneralOptions
         {
             get
@@ -84,6 +90,8 @@ namespace IceAge.type
                 // but shall we care?
                 generalOptions.write();
                 awsOptions.write();
+                defaulted = false;
+                OptionsChanged(this, new OptionsChangedEventArgs());
             }
         }
 
