@@ -43,8 +43,32 @@ namespace IceAge.dao
                 throw new BugInCodeException("Object tried to be updated is not obtained from db");
             }
 
-            //TODO: return whatever db is returned
-            return unit;
+            String query = "UPDATE UPLOAD_ITEM SET " + 
+                           " FILENAME = @FILENAME, " +
+                           " FILEPATH = @FILEPATH " + 
+                           " SIZE = @SIZE" + 
+                           " MOD_TIMESTAMP = @MOD_TIMESTAMP " +
+                           " UPLOADED_TIMESTAMP = @UPLOADED_TIMESTAMP " + 
+                           " CHECKSUM = @CHECKSUM)";
+            TransactionalConnectionWrapper connection = getConnection();
+            SQLiteCommand command = new SQLiteCommand(connection.Connection);
+            command.CommandType = CommandType.Text;
+            command.CommandText = query;
+            command.Parameters.Add(new SQLiteParameter("@FILENAME", unit.FileName));
+            command.Parameters.Add(new SQLiteParameter("@FILEPATH", unit.FullName));
+            command.Parameters.Add(new SQLiteParameter("@SIZE", unit.Size.ToString()));
+            command.Parameters.Add(new SQLiteParameter("@MOD_TIMESTAMP", unit.Timestamp.ToString()));
+            command.Parameters.Add(new SQLiteParameter("@UPLOADED_TIMESTAMP", unit.Timestamp.ToString()));
+            command.Parameters.Add(new SQLiteParameter("@CHECKSUM", unit.Checksum));
+            try
+            {
+                command.ExecuteNonQuery();
+            }
+            finally
+            {
+                closeConnection(connection);
+            }
+            return getOrSaveUploadUnit(unit);
         }
 
         public UploadUnit getOrSaveUploadUnit(UploadUnit unit)

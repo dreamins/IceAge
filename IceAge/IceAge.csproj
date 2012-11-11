@@ -124,6 +124,7 @@
     <Compile Include="factory\UploadUnitFactory.cs" />
     <Compile Include="factory\UploadUnitListFactory.cs" />
     <Compile Include="type\AWSOptions.cs" />
+    <Compile Include="UploadWorker.cs" />
     <Compile Include="type\Estimations.cs" />
     <Compile Include="type\UploadUnitList.cs" />
     <Compile Include="type\UploadUnit.cs" />

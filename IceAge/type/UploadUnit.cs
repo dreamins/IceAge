@@ -7,7 +7,7 @@ using System.Security.Cryptography;
 
 namespace IceAge.type
 {
-    class UploadUnit
+    class UploadUnit: IEquatable<UploadUnit>
     {
         public long Id { get; set; }
         public string FileName {get; private set;}
@@ -54,6 +54,17 @@ namespace IceAge.type
             }
 
             return Checksum;
+        }
+
+        public bool Equals(UploadUnit other)
+        {
+            if (other == null)
+                return false;
+
+            return this.FileName.Equals(other.FileName) &&
+                   this.FullName.Equals(other.FullName) &&
+                   this.Size == other.Size &&
+                   this.Timestamp == other.Timestamp;
         }
     }
 }

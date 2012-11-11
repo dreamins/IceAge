@@ -27,6 +27,11 @@ namespace IceAge
                 this.Estimations = estimations;
             }
         }
+        
+        public delegate void UploadDoneHandler(object sender, UploadDoneEventArgs e);
+        public event UploadDoneHandler UploadDone;
+        public class UploadDoneEventArgs : EventArgs {}
+
         #endregion
 
         public Controller(){
@@ -36,16 +41,24 @@ namespace IceAge
             reloadOptionsStuff(Options.Instance, null);
         }
 
+        public void startUpload() {
+        }
+
         internal void addPath(string path)
         {
             ICollection<UploadUnit> units = UploadUnitListFactory.createUploadUnitsFromPath(path);
             ICollection<UploadUnit> unitsToUpload = new List<UploadUnit>();
             foreach (UploadUnit unit in units)
             {
+                if (Uploads.Contains(unit))
+                {
+                    continue;
+                }
                 // is it in db?
                 UploadUnit newUnit = daoController.UploadUnitDAO.getOrSaveUploadUnit(unit);
                 unitsToUpload.Add(newUnit);
             }
+            
             // later if user clicks upload and forget, will just upload (but still save in sqllite), no matter if it is in sync or no
             // if user clicks sync we will pay attention to checksums and unit sync status
             Uploads.addAll(unitsToUpload);
