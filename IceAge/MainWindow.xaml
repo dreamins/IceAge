@@ -1,6 +1,7 @@
 ﻿<Window x:Class="IceAge.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:v="clr-namespace:IceAge.validation"
         Title="IceAge - Amazon Glacier client" Height="484" Width="860" ResizeMode="NoResize">
     <Grid>
         <TabControl Margin="0,0,0,0" Name="MainTabControl">
@@ -24,7 +25,7 @@
                 </DataGrid>
                     <Button Content="Add" Height="43" HorizontalAlignment="Left" Margin="639,6,0,0" Name="buttonAdd" VerticalAlignment="Top" Width="176" Click="buttonAdd_Click" />
                     <Button Content="Sync" Height="43" HorizontalAlignment="Left" Margin="639,65,0,0" Name="buttonSync" VerticalAlignment="Top" Width="176" Click="buttonSync_Click" />
-                    <Button Content="Upload and Forget" Height="43" HorizontalAlignment="Left" Margin="639,0,0,246" Name="buttonUploadAndForget" VerticalAlignment="Bottom" Width="176" Click="buttonUploadAndForget_Click" />
+                    <Button Content="Just upload!" Height="43" HorizontalAlignment="Left" Margin="639,0,0,246" Name="buttonUploadAndForget" VerticalAlignment="Bottom" Width="176" Click="buttonUploadAndForget_Click" />
                     <Button Content="Clear" Height="43" HorizontalAlignment="Left" Margin="639,185,0,0" Name="buttonClear" VerticalAlignment="Top" Width="176" Click="button1_Click" />
                     
                     <Label Content="Pricing estimate" Height="32" HorizontalAlignment="Left" Margin="678,320,0,0" Name="label13" VerticalAlignment="Top" Width="107" />
@@ -68,6 +69,7 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="211" />
                         <ColumnDefinition Width="599" />
+                        <ColumnDefinition Width="18*" />
                     </Grid.ColumnDefinitions>
                     <TextBox Height="26" HorizontalAlignment="Left" Margin="17,24,0,0" Name="AWSAccessKey" VerticalAlignment="Top" Width="237" Grid.ColumnSpan="2" 
                               Text="{Binding Mode=TwoWay, Path=AWSOptions.AWSAccessKey}"  />
@@ -82,6 +84,16 @@
                              Text="{Binding Mode=TwoWay, Path=AWSOptions.GlacierVault}" />
                     <Label Content="Glacier vault name" Height="26" HorizontalAlignment="Left" Margin="60,118,0,0" Name="label4" VerticalAlignment="Top" Grid.Column="1" />
                     <Button Content="Save" Height="45" HorizontalAlignment="Left" Margin="60,342,0,0" Name="AWSSave" VerticalAlignment="Top" Width="217" Grid.Column="1" Click="optionsSave_Click"/>
+                    <TextBox Grid.ColumnSpan="2" Height="26" HorizontalAlignment="Left" Margin="17,152,0,0" Name="awsRegion" VerticalAlignment="Top" Width="237" >
+                        <TextBox.Text>
+                            <Binding Mode="TwoWay" Path="AWSOptions.Region" UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <v:RegionValidationRule/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                    <Label Content="AWS region" Grid.Column="1" Height="26" HorizontalAlignment="Left" Margin="60,150,0,0" Name="label16" VerticalAlignment="Top" />
                 </Grid>
             </TabItem>
             <TabItem Header="About" Name="AboutTabItem">

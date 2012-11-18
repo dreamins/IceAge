@@ -29,9 +29,10 @@ namespace IceAge
         {
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(unhandledExceptionHandler);
             controller = new Controller();
-            Resources.Add("UploadUnits", controller.Uploads);
+            Resources.Add("UploadUnits", controller.UploadUnitList);
             Resources.Add("Options", Options.Instance);
             controller.EstimationChanged += new Controller.EstimationChangedHandler(controller_EstimationChanged);
+            controller.UploadDone += new Controller.UploadDoneHandler(controller_UploadDone);
             InitializeComponent();
             if (Options.Instance.Defaulted)
             {
@@ -76,9 +77,9 @@ namespace IceAge
         public void unhandledExceptionHandler(Object sender, UnhandledExceptionEventArgs e)
         {
             logger.Fatal("=====================================\n");
-            logger.Fatal("Unhandled exception", (Exception)e.ExceptionObject);
-            logger.Fatal("\n=====================================");
-            MessageBox.Show("Fatal error occured, please file an issue with last lines of log here https://github.com/dreamins/IceAge");
+            logger.Fatal("Unhandled exception\n", (Exception)e.ExceptionObject);
+            logger.Fatal("=====================================\n");
+            MessageBox.Show("Fatal error occured, please file an issue with lines of log here https://github.com/dreamins/IceAge");
         }
 
         private void buttonSync_Click(object sender, RoutedEventArgs e)
@@ -87,12 +88,27 @@ namespace IceAge
             buttonUploadAndForget.IsEnabled = false;
             buttonClear.IsEnabled = false;
 
-            controller.startUpload();
+            controller.startSyncUpload();
         }
 
         private void buttonUploadAndForget_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void controller_UploadDone(object sender, Controller.UploadDoneEventArgs args)
+        {
+            // enable buttons back
+            enableButton(buttonSync);
+            enableButton(buttonUploadAndForget);
+            enableButton(buttonClear);
+        }
+
+        private void enableButton(Button button)
+        {
+            button.Dispatcher.Invoke(
+                    System.Windows.Threading.DispatcherPriority.Normal,
+                    new Action(delegate() { button.IsEnabled = true; }));
         }
     }
 }

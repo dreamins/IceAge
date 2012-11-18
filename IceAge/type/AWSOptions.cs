@@ -27,6 +27,8 @@ namespace IceAge.type
         public string S3Bucket { get; set; }
         [DataMember]
         public string GlacierVault { get; set; }
+        [DataMember]
+        public string Region { get; set; }
 
         internal void write()
         {
@@ -48,5 +50,21 @@ namespace IceAge.type
             return JSONConfig<AWSOptions>.load(stream);
         }
 
+        internal Amazon.RegionEndpoint AWSRegionEndpoint 
+        {
+            get
+            {
+                return Amazon.RegionEndpoint.GetBySystemName(Region);
+            }
+        }
+
+
+        internal Amazon.Runtime.AWSCredentials AWSCredentials
+        {
+            get
+            {
+                return new Amazon.Runtime.BasicAWSCredentials(AWSAccessKey, AWSSecretKey);
+            }
+        }
     }
 }

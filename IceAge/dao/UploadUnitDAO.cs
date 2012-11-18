@@ -45,30 +45,33 @@ namespace IceAge.dao
 
             String query = "UPDATE UPLOAD_ITEM SET " + 
                            " FILENAME = @FILENAME, " +
-                           " FILEPATH = @FILEPATH " + 
-                           " SIZE = @SIZE" + 
-                           " MOD_TIMESTAMP = @MOD_TIMESTAMP " +
-                           " UPLOADED_TIMESTAMP = @UPLOADED_TIMESTAMP " + 
-                           " CHECKSUM = @CHECKSUM)";
+                           " FILEPATH = @FILEPATH, " + 
+                           " SIZE = @SIZE, " + 
+                           " MOD_TIMESTAMP = @MOD_TIMESTAMP, " +
+                           " UPLOADED_TIMESTAMP = @UPLOADED_TIMESTAMP, " + 
+                           " CHECKSUM = @CHECKSUM " +
+                           " WHERE ID = @ID";
             TransactionalConnectionWrapper connection = getConnection();
             SQLiteCommand command = new SQLiteCommand(connection.Connection);
             command.CommandType = CommandType.Text;
             command.CommandText = query;
+            command.Parameters.Add(new SQLiteParameter("@ID", unit.Id));
             command.Parameters.Add(new SQLiteParameter("@FILENAME", unit.FileName));
             command.Parameters.Add(new SQLiteParameter("@FILEPATH", unit.FullName));
             command.Parameters.Add(new SQLiteParameter("@SIZE", unit.Size.ToString()));
-            command.Parameters.Add(new SQLiteParameter("@MOD_TIMESTAMP", unit.Timestamp.ToString()));
-            command.Parameters.Add(new SQLiteParameter("@UPLOADED_TIMESTAMP", unit.Timestamp.ToString()));
+            command.Parameters.Add(new SQLiteParameter("@MOD_TIMESTAMP", unit.UploadedModTimestamp.ToString()));
+            command.Parameters.Add(new SQLiteParameter("@UPLOADED_TIMESTAMP", unit.UploadTimestamp.ToString()));
             command.Parameters.Add(new SQLiteParameter("@CHECKSUM", unit.Checksum));
             try
             {
                 command.ExecuteNonQuery();
+                connection.commit();
             }
             finally
             {
                 closeConnection(connection);
             }
-            return getOrSaveUploadUnit(unit);
+            return merge(unit, getOrSaveUploadUnit(unit));
         }
 
         public UploadUnit getOrSaveUploadUnit(UploadUnit unit)
@@ -89,7 +92,7 @@ namespace IceAge.dao
                 }
                 return unit;
             } else {
-                return toUploadUnit(dt.Rows[0]);
+                return merge(unit, toUploadUnit(dt.Rows[0]));
             }
         }
 
@@ -112,7 +115,7 @@ namespace IceAge.dao
             command.Parameters.Add(new SQLiteParameter("@FILENAME", unit.FileName));
             command.Parameters.Add(new SQLiteParameter("@FILEPATH", unit.FullName));
             command.Parameters.Add(new SQLiteParameter("@SIZE", unit.Size.ToString()));
-            command.Parameters.Add(new SQLiteParameter("@MOD_TIMESTAMP", unit.Timestamp.ToString()));
+            command.Parameters.Add(new SQLiteParameter("@MOD_TIMESTAMP", ""));
             command.Parameters.Add(new SQLiteParameter("@UPLOADED_TIMESTAMP", (-1).ToString()));
             command.Parameters.Add(new SQLiteParameter("@CHECKSUM", unit.Checksum));
             logger.Debug("Executing: <" + command.CommandText + ">");
@@ -126,8 +129,9 @@ namespace IceAge.dao
                                   long.Parse(dr["SIZE"].ToString()),
                                   long.Parse(dr["MOD_TIMESTAMP"].ToString()));
             uploadUnit.Checksum = dr["CHECKSUM"].ToString();
-            uploadUnit.InSync = dr["UPLOADED_TIMESTAMP"] == null;
+            uploadUnit.UploadedModTimestamp = long.Parse(dr["MOD_TIMESTAMP"].ToString());
             uploadUnit.Id = int.Parse(dr["ID"].ToString());
+            uploadUnit.UploadTimestamp = long.Parse(dr["UPLOADED_TIMESTAMP"].ToString());
             return uploadUnit;
         }
 
@@ -153,6 +157,7 @@ namespace IceAge.dao
                 if (reader != null)
                 {
                     reader.Close();
+                    reader.Dispose();
                 }
                 closeConnection(connection);
             }
@@ -184,6 +189,17 @@ namespace IceAge.dao
                 closeConnection(connection);
             }
             return dt;
+        }
+
+        // this stupidity comes from fact that I still did not refactor the Upload unit into
+        // separate DAO and FS objects
+        private UploadUnit merge(UploadUnit to, UploadUnit from)
+        {
+            to.Id = from.Id;
+            to.UploadedModTimestamp = from.UploadedModTimestamp;
+            to.UploadTimestamp = from.UploadTimestamp;
+            to.Checksum = from.Checksum;
+            return to;
         }
 
     }
