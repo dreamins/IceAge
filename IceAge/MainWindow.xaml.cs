@@ -65,8 +65,8 @@ namespace IceAge
 
         private void controller_EstimationChanged(object sender, Controller.EstimationChangedEventArgs args)
         {
-            estimateMonthlyCost.Content = "$" + args.Estimations.MonthlyCost;
-            estimateRequestsCost.Content = "$" + args.Estimations.RequestsCost;
+            estimateMonthlyCost.Content = args.Estimations.MonthlyCost.ToString("C", new System.Globalization.CultureInfo("en-US"));
+            estimateRequestsCost.Content = args.Estimations.RequestsCost.ToString("C", new System.Globalization.CultureInfo("en-US"));
         }
 
         private void button1_Click(object sender, RoutedEventArgs e)
